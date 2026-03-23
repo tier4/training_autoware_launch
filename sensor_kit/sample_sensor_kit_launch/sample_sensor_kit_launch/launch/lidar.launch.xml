@@ -5,9 +5,14 @@
   <arg name="vehicle_id" default="$(env VEHICLE_ID default)"/>
   <arg name="vehicle_mirror_param_file"/>
   <arg name="pointcloud_container_name" default="pointcloud_container"/>
-  <arg name="original_lidar_topic_name" default="/sensing/lidar/top/pointcloud"/>
-  <arg name="lidar_topic_name" default="/sensing/lidar/top/pointcloud_before_sync"/>
-  <node pkg="topic_tools" exec="relay" name="lidar_relay" args="$(var original_lidar_topic_name) $(var lidar_topic_name)"/>
+  <arg name="input_lidar_topic_name" default="/sensing/lidar/top/pointcloud_before_sync"/>
+  <arg name="output_concatenated_topic_name" default="/sensing/lidar/concatenated/pointcloud"/>
+  <node pkg="topic_tools" exec="relay" name="lidar_relay">
+    <param name="input_topic" value="$(var input_lidar_topic_name)"/>
+    <param name="output_topic" value="$(var output_concatenated_topic_name)"/>
+    <param name="type" value="sensor_msgs/msg/PointCloud2"/>
+    <param name="reliability" value="best_effort"/>
+  </node>
 
 
   <group>
@@ -33,6 +38,7 @@
       <arg name="use_intra_process" value="true"/>
       <arg name="use_multithread" value="true"/>
       <arg name="pointcloud_container_name" value="$(var pointcloud_container_name)"/>
+      <arg name="use_concat_filter" value="$(var use_concat_filter)"/>
     </include>
   </group>
 </launch>
