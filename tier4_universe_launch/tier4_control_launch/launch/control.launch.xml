@@ -78,6 +78,7 @@
     <group>
       <!-- set a control container to run all required components in the same process -->
       <node_container pkg="rclcpp_components" exec="$(var container_executable)" name="control_container" namespace="">
+        <composable_node pkg="autoware_glog_component" plugin="autoware::glog_component::GlogComponent" name="glog_control_container_component"/>
         <!-- shift decider -->
         <composable_node pkg="autoware_shift_decider" plugin="autoware::shift_decider::ShiftDecider" name="autoware_shift_decider">
           <remap from="input/control_cmd" to="/control/trajectory_follower/control_cmd"/>
@@ -163,7 +164,6 @@
             <remap from="~/input/current_steering" to="/vehicle/status/steering_status"/>
             <remap from="~/input/current_accel" to="/localization/acceleration"/>
             <remap from="~/input/current_operation_mode" to="/system/operation_mode/state"/>
-            <remap from="~/input/steering_offset_update" to="/vehicle/calibration/steer_offset_estimator/steering_offset_update"/>
             <remap from="~/output/predicted_trajectory" to="lateral/predicted_trajectory"/>
             <remap from="~/output/lateral_diagnostic" to="lateral/diagnostic"/>
             <remap from="~/output/slope_angle" to="longitudinal/slope_angle"/>
@@ -206,7 +206,9 @@
 
     <group>
       <!-- set a control check container to run all control checker components in the same process -->
-      <node_container pkg="rclcpp_components" exec="$(var container_executable)" name="control_check_container" namespace=""/>
+      <node_container pkg="rclcpp_components" exec="$(var container_executable)" name="control_check_container" namespace="">
+        <composable_node pkg="autoware_glog_component" plugin="autoware::glog_component::GlogComponent" name="glog_control_check_container_component"/>
+      </node_container>
 
       <!-- lane departure checker -->
       <group if="$(var launch_lane_departure_checker)">
